@@ -57,7 +57,7 @@ ROOT_URLCONF = "DastanPor.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -105,7 +105,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "fa"
 
 TIME_ZONE = "UTC"
 
@@ -117,7 +117,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = 'statics/'
+STATIC_ROOT = BASE_DIR / 'statics'
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+# ! چهار خط کد بالا به صورت پیش فرض برای اپ ها می باشد
+# ! ولی خط زیر یعنی آقا علاوه بر ۴ خط کدبالا که ماله پیش فرض هست
+# ! این دایرکتوری هایی که داخل لیست زیر برات نوشتم را نیز در نظر بگیر
+# ! BASE_DIR / "static", الان یک مسیر گلوبال 
+# ! براش تنظیم کردیم
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+    # "/var/www/static/",
+]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

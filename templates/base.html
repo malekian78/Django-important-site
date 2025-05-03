@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zxx" class="no-js">
+
+<head>
+    <!-- Mobile Specific Meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Favicon-->
+    {% comment %} <link rel="shortcut icon" href="{% static 'img/fav.png' %}" /> {% endcomment %}
+    <!-- Author Meta -->
+    <meta name="author" content="محمد داستان پور" />
+    <!-- Meta Description -->
+    <meta name="description" content="بهترین استاد" />
+    <!-- Meta Keyword -->
+    {% comment %} <meta name="keywords" content="" /> {% endcomment %}
+    <!-- meta character set -->
+    <meta charset="UTF-8" />
+    <!-- Site Title -->
+    <title>محمد داستان پور</title>
+
+    {% comment %} <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet" /> {% endcomment %}
+    <!--! css -->
+    {% comment %} <link rel="stylesheet" href="{% static 'css/linearicons.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/nice-select.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/animate.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" /> {% endcomment %}
+
+    {% comment %}! رفرش صفحه هر ۱۰ ثانیه  {% endcomment %}
+    {% comment %} <meta http-equiv="refresh" content="10" /> {% endcomment %}
+
+    <!-- importing custom styles for everyPage -->
+    {% block stylesImports %} {% endblock %}
+</head>
+
+<body>
+    <header id="header">
+        <h1>Header</h1>
+    </header>
+
+    <main>
+        {% block content %} {% endblock %}
+    </main>
+
+    <footer class="footer-area section-gap">
+        <h1>Footer</h1>
+    </footer>
+</body>
+
+</html>
