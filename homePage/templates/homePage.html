@@ -1,13 +1,30 @@
-{% extends "base.html" %} 
-{% load static %} 
+{% extends 'base.html' %}
+{% load static %}
 
 {% block stylesImports %}
-    <link rel="stylesheet" href="{% static 'css/homePage.css' %}" />
-    <link rel="stylesheet" href="{% static 'test.css' %}" />
-{% endblock stylesImports %}
-    
+  <link rel="stylesheet" href="{% static 'css/homePage.css' %}" />
+  <link rel="stylesheet" href="{% static 'test.css' %}" />
+{% endblock %}
+
+{% block javaScripImports %}
+  <script type="module" src="{% static 'theJava.js' %}"></script>
+{% endblock %}
+
 {% block content %}
-<h1>
-    به نام خدا .... سلام بر امام رضا(ع)
-</h1>
-{% endblock content %}
+  <h1>به نام خدا .... سلام بر امام رضا(ع)</h1>
+
+  <div id="audio-player-container">
+    {% comment %} TODO: مثلا از پیام رسان گپ یا ایتا امتحان کن url از مدلاسیون جنگو و همچنین از طریق مدلاسیون جنگو با گرفتن رشته ی  {% static 'reza.mp3' %} مورد زیر را به جای استفاده از {% endcomment %}
+    {% comment %} <audio src="https://assets.codepen.io/4358584/Anitek_-_Komorebi.mp3" preload="metadata" loop></audio> {% endcomment %}
+    {% comment %} <audio src="{% static 'reza.mp3' %}" preload="metadata" loop></audio> {% endcomment %}
+    <audio src="https://cdn.masaf.ir/contents/media/audio/Ostad_Raefipour_Mozakere_Ba_Amrika_Lorestan_64kb.mp3" preload="metadata" loop></audio>
+    <p>audio player ish</p>
+    <button id="play-icon"></button>
+    <span id="current-time" class="time">0:00</span>
+    <input type="range" id="seek-slider" value="0" />
+    <span id="duration" class="time">0:00</span>
+    <output id="volume-output">100</output>
+    <input type="range" id="volume-slider" max="100" value="100" />
+    <button id="mute-icon"></button>
+  </div>
+{% endblock %}
