@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     
     # My Apps
-    "homePage"
+    "homePage",
+    "speech"
 ]
 
 MIDDLEWARE = [
