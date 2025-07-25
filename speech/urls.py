@@ -3,5 +3,5 @@ from .views import *
 
 app_name = 'speech'
 urlpatterns = [
-    path('', home, name='list'),
+    path('', speech_list, name='list'),
 ]

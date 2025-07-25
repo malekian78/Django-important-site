@@ -2,13 +2,91 @@
 {% load static %}
 
 {% block stylesImports %}
-    
+  {% comment %} <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.7/mediaelementplayer.min.css" rel="stylesheet" />
+  <link href="{% static './speech-styles.css' %}" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia" /> {% endcomment %}
+
+  <link href="{% static './speech-list-style.css' %}" rel="stylesheet" />
+
 {% endblock %}
 
 {% block javaScripImports %}
+  {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.7/mediaelement-and-player.min.js"></script>
+  <script src="{% static './speech-javaScript.js' %}"></script> {% endcomment %}
+
+  {% comment %} <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const audio = document.getElementById('fc-media') // Replace with the actual ID of your audio element
+      const lyricsContainer = document.getElementById('song-lyrics')
+      let currentLyricIndex = 0
     
+      // Retrieve the lyrics data as a JSON string
+      const lyricsData = JSON.parse(document.getElementById('song-lyrics').getAttribute('data-lyrics'))
+    
+      audio.addEventListener('timeupdate', function () {
+        const currentTime = audio.currentTime
+    
+        // Find the current lyrics based on the time
+        while (currentLyricIndex < lyricsData.length - 1 && currentTime >= timeToSeconds(lyricsData[currentLyricIndex + 1].time)) {
+          currentLyricIndex++
+        }
+    
+        // Update the displayed lyrics
+        lyricsContainer.innerText = lyricsData[currentLyricIndex].lyrics
+      })
+    
+      function timeToSeconds(time) {
+        const [minutes, seconds] = time.split(':').map(parseFloat)
+        return minutes * 60 + seconds
+      }
+    })
+  </script> {% endcomment %}
 {% endblock %}
 
 {% block content %}
-    لیست سخنرانی ها
+  <p>لیست س
+خنرانی ها</p>
+
+
+
+
+
+
+
+  {% comment %} <div class="music-player">
+    {% for item in speech_list_object %}
+      <div class="cover">
+        <img alt="" src="{{ item.image.url }}" />
+      </div>
+
+      <div class="titre">
+        <h3>{{ item.title }}</h3>
+      </div>
+
+      <center>
+        <a href="{% if speech_list_object.has_previous %}
+            
+            ?page={{ speech_list_object.previous_page_number }}
+          {% endif %}">
+          <i class="fa fa-step-backward fa-2x"></i>
+        </a> &nbsp; &nbsp; &nbsp; <a href="{% if speech_list_object.has_next %}
+            
+            ?page={{ speech_list_object.next_page_number }}
+          {% endif %}">
+          <i class="fa fa-step-forward fa-2x"></i>
+        </a>
+      </center>
+
+      <div class="lecteur">
+        <audio class="fc-media" style="width: 100%;" id="fc-media">
+          <source src="{% if item.audio_file %}
+              {{ item.audio_file.url }}
+            {% endif %}"
+            type="audio/mp3" />
+        </audio>
+      </div>
+    {% endfor %}
+  </div> {% endcomment %}
 {% endblock %}
