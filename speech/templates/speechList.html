@@ -52,18 +52,18 @@
     {% comment %}speech List{% endcomment %}
     <div class="speech-list-panel">
 
-      {% for post in posts %} 
+      {% for item in speechList %} 
       {% comment %}! speech-card{% endcomment %}
-      <a class="speech-card" href="{% url 'homePage:home' %}">
+      <a class="speech-card" href="{% url 'speech:detail' speechSlug=item.slug %}">
         <div class="speech-image">
           {% comment %} <img src="{% static 'Screenshot_2014-10-23-16-25-08.png' %}" alt="" /> {% endcomment %}
-          <img src="{{post.image.url}}" alt="" />
+          <img src="{{item.image.url}}" alt="" />
         </div>
 
         <div class="speech-card-contet">
           <div class="speech-card-header">
             {% comment %} <h2>شب پنجم محرم ۱۴۰۴</h2> {% endcomment %}
-            <h2>{{post.title}}</h2>
+            <h2>{{item.title}}</h2>
           </div>
           <p class="speech-card-description">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و سه درصد گذشته حال و آینده، شناخت فراوان جامعه و متخصصان را می طلبد، تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی، و فرهنگ پیشرو در زبان فارسی ایجاد کرد، در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها، و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی، و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.</p>
           <div class="tags-styles">#محرم #دهه_محرم #محرم۱۴۰۴ #محرم_۱۴۰۴ #سخنرانی_محرم #مراسم_محرم #محرم_حسینی #محرم_ماه_خدا #هیئت #هیئت_آنلاین #مراسم_عزاداری #محرم_مجازی</div>
@@ -77,16 +77,16 @@
       {% endfor %}
 
       <ul class="pagination">
-        {% if posts.has_previous %}
+        {% if speechList.has_previous %}
           <li class="page-item">
             <a href="?page=1" class="page-link" aria-label="Next">اول</a>
           </li>
           <li class="page-item">
-            <a href="?page={{ posts.previous_page_number }}" class="page-link" aria-label="Previous"><span aria-hidden="true"><span class="lnr lnr-chevron-left"></span></span></a>
+            <a href="?page={{ speechList.previous_page_number }}" class="page-link" aria-label="Previous"><span aria-hidden="true"><span class="lnr lnr-chevron-left"></span></span></a>
           </li>
         {% endif %}
-        {% for i in posts.paginator.page_range %}
-          {% if posts.number == i %}
+        {% for i in speechList.paginator.page_range %}
+          {% if speechList.number == i %}
             <li class="page-item active">
               <a href="?page={{ i }}" class="page-link">{{ i }}</a>
             </li>
@@ -96,12 +96,12 @@
             </li>
           {% endif %}
         {% endfor %}
-        {% if posts.has_next %}
+        {% if speechList.has_next %}
           <li class="page-item">
-            <a href="?page={{ posts.next_page_number }}" class="page-link" aria-label="Next"><span aria-hidden="true"><span class="lnr lnr-chevron-right"></span></span></a>
+            <a href="?page={{ speechList.next_page_number }}" class="page-link" aria-label="Next"><span aria-hidden="true"><span class="lnr lnr-chevron-right"></span></span></a>
           </li>
           <li class="page-item">
-            <a href="?page={{ posts.paginator.num_pages }}" class="page-link" aria-label="Next">آخر</a>
+            <a href="?page={{ speechList.paginator.num_pages }}" class="page-link" aria-label="Next">آخر</a>
           </li>
         {% endif %}
       </ul>

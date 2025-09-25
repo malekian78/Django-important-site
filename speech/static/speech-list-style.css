@@ -32,6 +32,8 @@
     display: flex;
     gap: 8px;
     max-height: 200px;
+    text-decoration: none;
+    color: black;
 }
 
 .speech-card .speech-image {

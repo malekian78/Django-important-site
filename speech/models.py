@@ -10,6 +10,7 @@ class Speech(BaseModel):
     title = models.CharField(verbose_name=_("speech title"), max_length=100)
     image = models.ImageField(upload_to='speech/', default='speech/default.jpg')
     audio_file = models.FileField(blank=True,null=True)
+    slug = models.SlugField(unique=True)  # new
     
     class Meta:
         verbose_name = _("speech")

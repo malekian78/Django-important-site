@@ -10,15 +10,15 @@ class HomepageConfig(AppConfig):
     name = "homePage"
     
     #! ایجاد شده کد زیر را بنویسید migration توسط HomePage فقط وقتی که جدول
-    def ready(self):
-        from django.db.utils import ProgrammingError
-        try:
-            from .models import HomePage
-            # Check if the table exists
-            if 'homePage_homepage' in connection.introspection.table_names():
-                if not HomePage.objects.exists():
-                    HomePage.objects.create()
-            else:
-                logger.warning("\n\n⛔ The 'HomePage' table does not exist. Did you forget to run migrations?\n\n")
-        except (ProgrammingError, OperationalError) as e:
-            logger.warning(f"\n\n ⛔Could not check for HomePage instance due to DB error: {e}\n\n")
+    # def ready(self):
+    #     from django.db.utils import ProgrammingError
+    #     try:
+    #         from .models import HomePage
+    #         # Check if the table exists
+    #         if 'homePage_homepage' in connection.introspection.table_names():
+    #             if not HomePage.objects.exists():
+    #                 HomePage.objects.create()
+    #         else:
+    #             logger.warning("\n\n⛔ The 'HomePage' table does not exist. Did you forget to run migrations?\n\n")
+    #     except (ProgrammingError, OperationalError) as e:
+    #         logger.warning(f"\n\n ⛔Could not check for HomePage instance due to DB error: {e}\n\n")
