@@ -1,0 +1,32 @@
+@font-face {
+    font-family: 'BTitr';
+    src: url('/statics/fonts/B-Titr/B Titr Bold_0.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'IRanSans';
+    src: url('/statics/fonts/Iranian.Sans.ttf_p30download.com/Fonts/irsans_p30download.com.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'BNazanin';
+    src: url('/statics/fonts/B_NAZANIN/B-NAZANIN.TTF') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Vazir';
+    src: url('/statics/fonts/vazir-font-v16.1.0/Vazir-Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+ * {
+    font-family: 'BNazanin';
+    margin: 0;
+}

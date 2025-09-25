@@ -1,0 +1,79 @@
+.speeches-container {
+    max-width: 1000px;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    align-items: center;
+    height: 500px;
+}
+
+
+.filters-for-speech-list {
+    width: 25%;
+    height: 200px;
+}
+
+.speech-list-panel {
+    width: 75%;
+    border-width: 1px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.speech-card {
+    border-radius: 8px;
+    border: 1px solid gray;
+    box-shadow: 1px 1px 2px gray;
+    width: 100%;
+    padding: 8px;
+    display: flex;
+    gap: 8px;
+    max-height: 200px;
+}
+
+.speech-card .speech-image {
+    height: 100%;
+    width: 30%;
+    min-width: 200px;
+}
+
+.speech-card .speech-image img{
+    width: 100%;
+    /* height: 100%; */
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.speech-card .speech-card-contet {
+    height: 100%;
+    /* width: 80%; */
+    flex-grow: 1;
+}
+
+
+.speech-card .speech-card-contet .speech-card-header {
+    font-family: 'BTitr';
+}
+
+.speech-card .speech-card-contet .speech-card-description {
+    /* font-family: IRanSans; */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    /* number of lines to show */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 8px;
+}
+
+/* از این مقدار کمتر بود استایل ها اجرا شوند screen اگر اندازه   */
+/* یعنی اگه اندازش دیگه خیییلی اگه می خواست بزرگ باشه اندازش فوقش 600 باشه نه بیشتر */
+@media screen and (max-width: 600px) {
+    .speeches-container {
+        flex-direction: column;
+    }
+}

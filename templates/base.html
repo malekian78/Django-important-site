@@ -35,9 +35,10 @@
 
     <!-- importing custom styles for everyPage -->
     {% block stylesImports %} {% endblock %}
+    <link rel="stylesheet" href="{% static 'fonts/fonts.css' %}">
 </head>
 
-<body>
+<body dir="rtl">
     <header id="header">
         <h1>Header</h1>
         <a href="{% url 'homePage:home' %}">Home</a>
