@@ -47,64 +47,120 @@
 {% block content %}
   <div class="speeches-container">
     {% comment %}Filters{% endcomment %}
-    <div class="filters-for-speech-list"></div>
+    <div class="filters-for-speech-list">
+      <form method="get">
+        <input type="text" name="search" placeholder="Search..." value="{{ request.GET.search }}" />
+        <input type="text" name="author" placeholder="Author..." value="{{ request.GET.author }}" />
+        <select name="ordering">
+          <option value="-created_at">Newest</option>
+          <option value="created_at">Oldest</option>
+          <option value="title">Title (A-Z)</option>
+          <option value="-title">Title (Z-A)</option>
+        </select>
+        <button type="submit">Filter</button>
+      </form>
+    </div>
 
     {% comment %}speech List{% endcomment %}
     <div class="speech-list-panel">
-
-      {% for item in speechList %} 
-      {% comment %}! speech-card{% endcomment %}
-      <a class="speech-card" href="{% url 'speech:detail' speechSlug=item.slug %}">
-        <div class="speech-image">
-          {% comment %} <img src="{% static 'Screenshot_2014-10-23-16-25-08.png' %}" alt="" /> {% endcomment %}
-          <img src="{{item.image.url}}" alt="" />
-        </div>
-
-        <div class="speech-card-contet">
-          <div class="speech-card-header">
-            {% comment %} <h2>شب پنجم محرم ۱۴۰۴</h2> {% endcomment %}
-            <h2>{{item.title}}</h2>
+      {% for item in speechList %}
+        {% comment %}! speech-card{% endcomment %}
+        <a class="speech-card" href="{% url 'speech:detail' speechSlug=item.slug %}">
+          <div class="speech-image">
+            {% comment %} <img src="{% static 'Screenshot_2014-10-23-16-25-08.png' %}" alt="" /> {% endcomment %}
+            <img src="{{ item.image.url }}" alt="" />
           </div>
-          <p class="speech-card-description">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و سه درصد گذشته حال و آینده، شناخت فراوان جامعه و متخصصان را می طلبد، تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی، و فرهنگ پیشرو در زبان فارسی ایجاد کرد، در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها، و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی، و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.</p>
-          <div class="tags-styles">#محرم #دهه_محرم #محرم۱۴۰۴ #محرم_۱۴۰۴ #سخنرانی_محرم #مراسم_محرم #محرم_حسینی #محرم_ماه_خدا #هیئت #هیئت_آنلاین #مراسم_عزاداری #محرم_مجازی</div>
-          <div class="speech-card-feedback">
-            <span>تعداد بازدید: ۴۳۰۰</span>
-            <span>تعداد لایک: 700</span>
-            <span>تاریخ: 1404/04/12</span>
+
+          <div class="speech-card-contet">
+            <div class="speech-card-header">
+              {% comment %} <h2>شب پنجم محرم ۱۴۰۴</h2> {% endcomment %}
+              <h2>{{ item.title }}</h2>
+            </div>
+            <p class="speech-card-description">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و سه درصد گذشته حال و آینده، شناخت فراوان جامعه و متخصصان را می طلبد، تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی، و فرهنگ پیشرو در زبان فارسی ایجاد کرد، در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها، و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی، و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.</p>
+            {% comment %} <div class="tags-styles">#محرم #دهه_محرم #محرم۱۴۰۴ #محرم_۱۴۰۴ #سخنرانی_محرم #مراسم_محرم #محرم_حسینی #محرم_ماه_خدا #هیئت #هیئت_آنلاین #مراسم_عزاداری #محرم_مجازی</div> {% endcomment %}
+            <div class="speech-card-feedback">
+              <span>تعداد بازدید: ۴۳۰۰</span>
+              <span>تعداد لایک: 700</span>
+              <span>تاریخ: 1404/04/12</span>
+            </div>
           </div>
-        </div>
-      </a>
+        </a>
       {% endfor %}
 
-      <ul class="pagination">
-        {% if speechList.has_previous %}
-          <li class="page-item">
-            <a href="?page=1" class="page-link" aria-label="Next">اول</a>
+      <div class="pagination-container">
+        <ul class="pagination" id="pagination">
+          {% comment %}! اولین اولین صفحه{% endcomment %}
+          <li class="pagination-item">
+            <a href="?page=1" class="pagination-link pagination-arrow {% if not speechList.has_previous %}disabled{% endif %}" data-action="first" aria-label="First page">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="11 17 6 12 11 7"></polyline>
+                <polyline points="18 17 13 12 18 7"></polyline>
+              </svg>
+            </a>
           </li>
-          <li class="page-item">
-            <a href="?page={{ speechList.previous_page_number }}" class="page-link" aria-label="Previous"><span aria-hidden="true"><span class="lnr lnr-chevron-left"></span></span></a>
+          {% comment %}! صفحه قبلی{% endcomment %}
+          <li class="pagination-item">
+            <a href="?page={% if speechList.has_previous %}{{ speechList.previous_page_number }}{% endif %}" class="pagination-link pagination-arrow {% if not speechList.has_previous %}disabled{% endif %}" data-action="prev" aria-label="Previous page">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </a>
           </li>
-        {% endif %}
-        {% for i in speechList.paginator.page_range %}
-          {% if speechList.number == i %}
-            <li class="page-item active">
-              <a href="?page={{ i }}" class="page-link">{{ i }}</a>
-            </li>
-          {% else %}
-            <li class="page-item">
-              <a href="?page={{ i }}" class="page-link">{{ i }}</a>
-            </li>
-          {% endif %}
-        {% endfor %}
-        {% if speechList.has_next %}
-          <li class="page-item">
-            <a href="?page={{ speechList.next_page_number }}" class="page-link" aria-label="Next"><span aria-hidden="true"><span class="lnr lnr-chevron-right"></span></span></a>
+
+          {% for i in speechList.paginator.page_range %}
+            {% comment %}یه شرط زیر براشون میزاریم تا به تعداد صفحات مشخصی رندر شود{% endcomment %}
+            {% if i >= speechList.number|add:'-2' and i <= speechList.number|add:'2' %}
+              {% if speechList.number == i %}
+                <li class="pagination-item">
+                  <a href="?page={{ i }}" class="pagination-link active">{{ i }}</a>
+                </li>
+              {% else %}
+                <li class="pagination-item">
+                  <a href="?page={{ i }}" class="pagination-link">{{ i }}</a>
+                </li>
+              {% endif %}
+              {% comment %}! صفوحات{% endcomment %}
+              {% comment %} <li class="pagination-item">
+                <a href="#" class="pagination-link active" data-page="1">1</a>
+              </li>
+              <li class="pagination-item">
+                <a href="#" class="pagination-link" data-page="2">2</a>
+              </li>
+              <li class="pagination-item">
+                <a href="#" class="pagination-link" data-page="3">3</a>
+              </li>
+              <li class="pagination-item">
+                <span class="pagination-ellipsis">...</span>
+              </li>
+              <li class="pagination-item">
+                <a href="#" class="pagination-link" data-page="30">30</a>
+              </li> {% endcomment %}
+            {% elif i == speechList.number|add:'-3' or i == speechList.number|add:'3' %}
+              <li class="pagination-item">
+                <span class="pagination-ellipsis">...</span>
+              </li>
+            {% endif %}
+          {% endfor %}
+
+          {% comment %}! صفحه بعدی{% endcomment %}
+          <li class="pagination-item">
+            <a href="?page={% if speechList.has_next %}{{ speechList.next_page_number }}{% endif %}" class="pagination-link pagination-arrow {% if not speechList.has_next %}disabled{% endif %}" data-action="next" aria-label="Next page">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </a>
           </li>
-          <li class="page-item">
-            <a href="?page={{ speechList.paginator.num_pages }}" class="page-link" aria-label="Next">آخر</a>
+          {% comment %}! آخرین آخرین صفحه{% endcomment %}
+          <li class="pagination-item">
+            <a href="?page={{ speechList.paginator.num_pages }}" class="pagination-link pagination-arrow {% if not speechList.has_next %}disabled{% endif %}" data-action="last" aria-label="Last page">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="13 17 18 12 13 7"></polyline>
+                <polyline points="6 17 11 12 6 7"></polyline>
+              </svg>
+            </a>
           </li>
-        {% endif %}
-      </ul>
+        </ul>
+      </div>
     </div>
   </div>
 
@@ -124,10 +180,22 @@
             
             
             
+            
+            
+            
+            
+            
+            
             ?page={{ speech_list_object.previous_page_number }}
           {% endif %}">
           <i class="fa fa-step-backward fa-2x"></i>
         </a> &nbsp; &nbsp; &nbsp; <a href="{% if speech_list_object.has_next %}
+            
+            
+            
+            
+            
+            
             
             
             

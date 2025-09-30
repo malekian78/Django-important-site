@@ -1,15 +1,21 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Speech
+from django.db.models import Q
 
 # Create your views here.
 def speech_list(request):
-    speechList= Paginator(Speech.objects.all(),2)
-    # page_number = request.GET.get('page')
-    # page_number = 1
-    # page_obj = paginator.get_page(page_number)
-    # context={"speech_list_object":page_obj}
-    
+    allSpeech = Speech.objects.all()
+    search = request.GET.get('search')
+    if search:
+        allSpeech = allSpeech.filter(
+            Q(title__icontains=search) 
+            # |
+            # Q(content__icontains=search)
+        )
+        
+        
+    speechList= Paginator(allSpeech,2)
     try:
         page_number = request.GET.get('page')
         speechList = speechList.get_page(page_number)
