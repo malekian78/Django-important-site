@@ -1,11 +1,10 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="zxx" class="no-js">
-
-<head>
+  <head>
     <!-- Mobile Specific Meta -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <!-- Favicon-->
+    <!-- Favicon -->
     {% comment %} <link rel="shortcut icon" href="{% static 'img/fav.png' %}" /> {% endcomment %}
     <!-- Author Meta -->
     <meta name="author" content="محمد داستان پور" />
@@ -19,7 +18,7 @@
     <title>محمد داستان پور</title>
 
     {% comment %} <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet" /> {% endcomment %}
-    <!--! css -->
+    <!-- ! css -->
     {% comment %} <link rel="stylesheet" href="{% static 'css/linearicons.css' %}" />
     <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" />
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" />
@@ -30,31 +29,60 @@
     <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}" />
     <link rel="stylesheet" href="{% static 'css/main.css' %}" /> {% endcomment %}
 
-    {% comment %}! رفرش صفحه هر ۱۰ ثانیه  {% endcomment %}
+    {% comment %}! رفرش صفحه هر ۱۰ ثانیه{% endcomment %}
     {% comment %} <meta http-equiv="refresh" content="10" /> {% endcomment %}
 
     <!-- importing custom styles for everyPage -->
-    {% block stylesImports %} {% endblock %}
-    <link rel="stylesheet" href="{% static 'fonts/fonts.css' %}">
-</head>
+    {% block stylesImports %}
 
-<body dir="rtl">
+    {% endblock %}
+    <link rel="stylesheet" href="{% static 'fonts/fonts.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}" />
+  </head>
+
+  <body dir="rtl">
     <header id="header">
-        <h1>Header</h1>
-        <a href="{% url 'homePage:home' %}">Home</a>
-        <a href="{% url 'speech:list' %}">speech-list</a>
+      <nav class="navigation">
+        <ul>
+          <li>
+            <a class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'homePage:home' %}">
+              خانه{% comment %}از کلاس زیر هم میشد استفاده کنی ولی با تغییر url باید path زیر هم تغییر کند{% endcomment %}
+              {% comment %}class="{% if request.path == '/' %}active{% endif %}"{% endcomment %}
+            </a>
+          </li>
+          <li>
+            <a class="{% if request.resolver_match.url_name == 'list' %}active{% endif %}" href="{% url 'speech:list' %}">لیست سخنرانی‌ها</a>
+          </li>
+        </ul>
+      </nav>
+      <div class="menuToggle" onclick="ToggleMenu()"></div>
     </header>
 
     <main>
-        {% block content %} {% endblock %}
+      {% block content %}
+
+      {% endblock %}
     </main>
 
     <footer class="footer-area section-gap">
-        <h1>Footer</h1>
+      <h1>Footer</h1>
     </footer>
 
-    {% block javaScripImports %} {% endblock %}
+    {% comment %} <script type="module" src="{% static 'js\navbar.js' %}"></script> {% endcomment %}
+    <script>
+      function ToggleMenu() {
+        const menuToggle = document.querySelector('.menuToggle')
+        const navigation = document.querySelector('.navigation')
+        menuToggle.classList.toggle('active')
+        navigation.classList.toggle('active')
+      }
+      window.addEventListener('scroll', function () {
+        var header = document.querySelector('header')
+        header.classList.toggle('sticky', window.scrollY > 0)
+      })
+    </script>
+    {% block javaScripImports %}
 
-</body>
-
+    {% endblock %}
+  </body>
 </html>

@@ -38,14 +38,16 @@ class Speech(BaseModel):
     visit_count = models.PositiveIntegerField(
         verbose_name=("تعداد افراد بازدید کننده"), default=0
     )
-    publish_time = jmodels.jDateField(verbose_name=("تاریخ انتشار"), default=jdate.today)
+    publish_time = jmodels.jDateField(verbose_name=("تاریخ مجاز نمایش"), default=jdate.today, help_text="تاریخی که میخواهید این پست به کاربران نمایش داده شود.")
+    event_date_time = jmodels.jDateField(verbose_name=("تاریخ مراسم"), default=jdate.today, help_text="تاریخی که مراسم و سخنرانی در اصل در آن تاریخ برگزار شده بود")
     first_description = models.TextField(
         verbose_name=("معرفی اولیه"), max_length=500, blank=True
     )
     lyrics=models.TextField(verbose_name="زیرنویس صوت سخنرانی", blank=True,null=True)
     complete_description = models.TextField(
-        verbose_name=("توضیح کامل سخنرانی"), max_length=500, blank=True
+        verbose_name=("توضیح کامل سخنرانی"), blank=True
     )
+    #TODO: الان واجب نیست .... ولی یه کلید خارجی به یوزر بزن ... بفهمیم چه کسی این پست را ایجاد کرده
 
     class Meta:
         verbose_name = "سخنرانی"
