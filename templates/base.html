@@ -55,7 +55,7 @@
           </li>
         </ul>
       </nav>
-      <div class="menuToggle" onclick="ToggleMenu()"></div>
+      <div class="menuToggle"></div>
     </header>
 
     <main>
@@ -68,8 +68,8 @@
       <h1>Footer</h1>
     </footer>
 
-    {% comment %} <script type="module" src="{% static 'js\navbar.js' %}"></script> {% endcomment %}
-    <script>
+    <script type="module" src="{% static 'js\navbar.js' %}"></script>
+    {% comment %} <script>
       function ToggleMenu() {
         const menuToggle = document.querySelector('.menuToggle')
         const navigation = document.querySelector('.navigation')
@@ -80,7 +80,7 @@
         var header = document.querySelector('header')
         header.classList.toggle('sticky', window.scrollY > 0)
       })
-    </script>
+    </script> {% endcomment %}
     {% block javaScripImports %}
 
     {% endblock %}
