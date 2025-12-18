@@ -29,4 +29,5 @@
  * {
     font-family: 'BNazanin';
     margin: 0;
+    box-sizing: border-box;
 }

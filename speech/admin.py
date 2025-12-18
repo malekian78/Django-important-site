@@ -1,7 +1,8 @@
 from django.contrib import admin
-from .models import Speech, Category, Tag
+from .models import CulturalGroup, Speech, Category, Tag
 from django.db import models
 from django.forms.widgets import ClearableFileInput
+from django.utils.html import format_html
 
 
 class AudioFileInput(ClearableFileInput):
@@ -62,6 +63,16 @@ class TagAdmin(admin.ModelAdmin):
     )
     prepopulated_fields = {"slug": ("name",)}
 
+@admin.register(CulturalGroup)
+class SpeechOptionAdmin(admin.ModelAdmin):
+    list_display = ("title", "image_preview")
+
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" style="height:50px;" />', obj.image.url
+            )
+        return "-"
 
 admin.site.register(Speech, SpeechAdmin)
 admin.site.register(Category, CategoryAdmin)
