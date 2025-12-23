@@ -74,9 +74,13 @@ class Speech(BaseModel):
 
     def clean(self):
         super().clean()
-        if self.audio_file and self.audio_link:
+        has_file = bool(self.audio_file)
+        has_link = bool(self.audio_link)
+
+        if has_file == has_link:
+            # یعنی یا هر دو پر هستند یا هر دو خالی
             raise ValidationError(
-                "فقط یکی از فایل صوتی یا لینک سخنرانی باید پر شود، نه هر دو."
+                "باید دقیقاً یکی از «فایل صوتی» یا «لینک سخنرانی» را وارد کنید."
             )
 
 
@@ -113,7 +117,7 @@ class Category(BaseModel):
 
 
 class Tag(BaseModel):
-    name = models.CharField(verbose_name=("نام تگ"), max_length=150)
+    name = models.CharField(verbose_name=("نام تگ"), max_length=150, help_text=('معمولا تک کلمه‌ای هستند'))
     slug = models.SlugField(
         verbose_name=("لینک دسترسی به تگ"),
         unique=True,

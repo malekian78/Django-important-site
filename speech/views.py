@@ -1,12 +1,13 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .models import Speech
+from .models import Speech, Tag, Category
 from django.db.models import Q
 import re
 
 # Create your views here.
 def speech_list(request):
-    allSpeech = Speech.objects.all()
+    # allSpeech = Speech.objects.all()
+    allSpeech = Speech.objects.prefetch_related('category', 'tag')
     search = request.GET.get('search')
     if search:
         allSpeech = allSpeech.filter(
@@ -14,7 +15,17 @@ def speech_list(request):
             # |
             # Q(content__icontains=search)
         )
-        
+    
+    selected_categories = request.GET.getlist('categories')
+    selected_tags = request.GET.getlist('tags')
+
+    if selected_categories:
+        allSpeech = allSpeech.filter(category__id__in=selected_categories)
+
+    if selected_tags:
+        allSpeech = allSpeech.filter(tag__id__in=selected_tags)
+
+    allSpeech = allSpeech.distinct()
         
     speechList= Paginator(allSpeech,2)
     try:
@@ -25,9 +36,45 @@ def speech_list(request):
     except EmptyPage:
         speechList = speechList.get_page(1)
         
-    context={"speechList": speechList}
+    context={
+        "speechList": speechList, 
+        # 'categories': Category.objects.filter(parent__isnull=True)
+        #     .prefetch_related('children'),
+        'categories': Category.objects.filter(parent__isnull=True).prefetch_related(
+                'children__children__children__children'
+            ),
+        'tags': Tag.objects.all(),
+        'selected_categories': list(map(int, selected_categories)),
+        'selected_tags': list(map(int, selected_tags)),}
         
     return render(request, 'speechList.html', context)
+
+
+def tag_detail(request, slug):
+    tag = get_object_or_404(Tag, slug=slug)
+
+    qs = (
+        Speech.objects
+        .filter(tag=tag)
+        .prefetch_related("tag")
+    )
+
+    search = request.GET.get("search")
+    if search:
+        qs = qs.filter(
+            Q(title__icontains=search)
+        )
+
+    paginator = Paginator(qs, 2)
+    page_number = request.GET.get("page")
+    speech_list = paginator.get_page(page_number)
+
+    context = {
+        # "tag": tag,
+        "speechList": speech_list,
+    }
+
+    return render(request, "speechList.html", context)
 
 # تابع تبدیل به ثانیه 
 def to_seconds(t):

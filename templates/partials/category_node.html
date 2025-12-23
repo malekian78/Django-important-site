@@ -1,0 +1,20 @@
+<li>
+  <label>
+    <input type="checkbox"
+           name="categories"
+           value="{{ category.id }}"
+           class="category-checkbox"
+           data-id="{{ category.id }}"
+           data-parent="{{ category.parent_id }}"
+           {% if category.id in selected_categories %}checked{% endif %}>
+    {{ category.name }}
+  </label>
+
+  {% if category.children.all %}
+    <ul>
+      {% for child in category.children.all %}
+        {% include "partials/category_node.html" with category=child %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+</li>

@@ -2,5 +2,11 @@ main {
     max-width: 1200px;
     padding-top: 50px;
     margin: auto;
-    padding: 50px 32px 8px 32px;
+    padding: 60px 32px 8px 32px;
+}
+
+@media screen and (max-width: 780px) {
+    main {
+        padding: 60px 8px 8px 8px;
+    }
 }

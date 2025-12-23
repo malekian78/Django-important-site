@@ -2,6 +2,7 @@
     display: flex;
     gap: 12px;
     margin-bottom: 42px;
+    margin-top: 32px;
 }
 
 .main-description {
@@ -61,6 +62,10 @@
     .main-description {
         width: 100%;
         align-items: center;
+        padding-left: 0;
+    }
+    .main-image {
+        width: 100%;
     }
 }
 
@@ -68,6 +73,7 @@
     display: flex;
     justify-content: space-around;
     margin-bottom: 20px;
+    gap: 8px;
 }
 
 .feature-card {
@@ -97,7 +103,7 @@
         flex-wrap: wrap;
     }
     .feature-card {
-        width: 49%;
+        width: 48%;
     }
 }
 
@@ -129,6 +135,75 @@
 #transcript .line.active {
     color: red;
     font-weight: bold;
+}
+
+.category-tags {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.category, .tags {
+    width: 50%;
+}
+
+.tags {
+    padding-left: 16px;
+}
+
+.category ul, .tags ul {
+    display: flex;
+    flex-wrap: wrap;
+    padding-right: 22px;
+    margin-top: 8px;
+}
+
+
+
+.category li, .tags li {
+    margin-left: 30px;
+    transition: 300ms;
+}
+
+.category li:hover , .tags li:hover {
+    color: #c98600;
+}
+
+.category li a, .tags li a{
+    text-decoration: none;
+    color: #373737;
+    transition: 300ms;
+    margin-right: -5px;
+}
+
+.category li a:hover, .tags li a:hover {
+    color: #c98600;
+}
+
+.category .cat-head, .tags .tag-head {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 6px;
+    
+}
+
+.category .cat-head span, .tags .tag-head span {
+    font-family: 'BTitr';
+}
+
+.category .cat-head::after, .tags .tag-head::after {
+    content: '';
+    flex-grow: 1;
+    display: block;
+    height: 4px;
+    background-color: #f7f0e2;
+}
+
+.category .cat-head svg, .tags .tag-head svg{
+    width: 30px;
+    color: #192d2f;
 }
 
 
@@ -246,4 +321,19 @@
     align-items: center;
     font-size: 14px;
     color: #ccc;
+}
+
+
+@media screen and (max-width: 780px) {
+    .category-tags {
+        flex-direction: column;
+    }
+
+    .tags {
+        padding-left: 0;
+    }
+
+    .category, .tags {
+        width: 100%;
+    }
 }
