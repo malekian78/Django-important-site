@@ -1,23 +1,26 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .models import Speech, Tag, Category
-from django.db.models import Q
+from .models import Speech, Tag, Category, Favorite
+from django.db.models import Q, F
 import re
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
 def speech_list(request):
     # allSpeech = Speech.objects.all()
-    allSpeech = Speech.objects.prefetch_related('category', 'tag')
-    search = request.GET.get('search')
+    allSpeech = Speech.objects.prefetch_related("category", "tag")
+    search = request.GET.get("search")
     if search:
         allSpeech = allSpeech.filter(
-            Q(title__icontains=search) 
+            Q(title__icontains=search)
             # |
             # Q(content__icontains=search)
         )
-    
-    selected_categories = request.GET.getlist('categories')
-    selected_tags = request.GET.getlist('tags')
+
+    selected_categories = request.GET.getlist("categories")
+    selected_tags = request.GET.getlist("tags")
 
     if selected_categories:
         allSpeech = allSpeech.filter(category__id__in=selected_categories)
@@ -26,44 +29,39 @@ def speech_list(request):
         allSpeech = allSpeech.filter(tag__id__in=selected_tags)
 
     allSpeech = allSpeech.distinct()
-        
-    speechList= Paginator(allSpeech,2)
+
+    speechList = Paginator(allSpeech, 2)
     try:
-        page_number = request.GET.get('page')
+        page_number = request.GET.get("page")
         speechList = speechList.get_page(page_number)
     except PageNotAnInteger:
         speechList = speechList.get_page(1)
     except EmptyPage:
         speechList = speechList.get_page(1)
-        
-    context={
-        "speechList": speechList, 
+
+    context = {
+        "speechList": speechList,
         # 'categories': Category.objects.filter(parent__isnull=True)
         #     .prefetch_related('children'),
-        'categories': Category.objects.filter(parent__isnull=True).prefetch_related(
-                'children__children__children__children'
-            ),
-        'tags': Tag.objects.all(),
-        'selected_categories': list(map(int, selected_categories)),
-        'selected_tags': list(map(int, selected_tags)),}
-        
-    return render(request, 'speechList.html', context)
+        "categories": Category.objects.filter(parent__isnull=True).prefetch_related(
+            "children__children__children__children"
+        ),
+        "tags": Tag.objects.all(),
+        "selected_categories": list(map(int, selected_categories)),
+        "selected_tags": list(map(int, selected_tags)),
+    }
+
+    return render(request, "speechList.html", context)
 
 
 def tag_detail(request, slug):
     tag = get_object_or_404(Tag, slug=slug)
 
-    qs = (
-        Speech.objects
-        .filter(tag=tag)
-        .prefetch_related("tag")
-    )
+    qs = Speech.objects.filter(tag=tag).prefetch_related("tag")
 
     search = request.GET.get("search")
     if search:
-        qs = qs.filter(
-            Q(title__icontains=search)
-        )
+        qs = qs.filter(Q(title__icontains=search))
 
     paginator = Paginator(qs, 2)
     page_number = request.GET.get("page")
@@ -76,25 +74,70 @@ def tag_detail(request, slug):
 
     return render(request, "speechList.html", context)
 
-# تابع تبدیل به ثانیه 
+
+# تابع تبدیل به ثانیه
 def to_seconds(t):
     m, s = t.split(":")
     return int(m) * 60 + float(s)
 
+
 def speech_detail(request, speechSlug):
-    theSpeech = get_object_or_404(Speech, slug = speechSlug)
+    theSpeech = get_object_or_404(Speech, slug=speechSlug)
     print(theSpeech)
-    
+
+    is_liked = False
+    if request.user.is_authenticated:
+        is_liked = theSpeech.favorites.filter(user=request.user).exists()
+
+    # برای شمارش بازدید(visit_count)
+    session_key = f"visited_page_{theSpeech.id}"
+    if not request.session.get(session_key):
+        Speech.objects.filter(id=theSpeech.id).update(visit_count=F("visit_count") + 1)
+        request.session[session_key] = True
+
     pattern = r"\[(\d{2}:\d{2}\.\d{3}) --> (\d{2}:\d{2}\.\d{3})\]\s+(.*)"
     matches = re.findall(pattern, theSpeech.lyrics)
     result = []
     for start, end, text in matches:
-        result.append({
-            "start": to_seconds(start),
-            "end": to_seconds(end),
-            "text": text.strip()
-        })
+        result.append(
+            {"start": to_seconds(start), "end": to_seconds(end), "text": text.strip()}
+        )
     minute = 0
-    if(len(result) > 0):
+    if len(result) > 0:
         minute = int(result[-1]["end"] / 60)
-    return render(request, 'seeechDetail.html', {'theSpeech': theSpeech, 'lyric': result, 'minutes': minute})
+    return render(
+        request,
+        "seeechDetail.html",
+        {
+            "theSpeech": theSpeech,
+            "lyric": result,
+            "minutes": minute,
+            "is_liked": is_liked,
+        },
+    )
+
+
+# @login_required # به صورت دستی میایم و ریدایرکت می کنیم با دو خط کد زیر (زیرا  درخواست فتچ از سمت جاوااسکرپیت برامون فرستاده میشه و ریدایرکت انجام نمیشه)
+def toggle_favorite(request, slug):
+    if not request.user.is_authenticated:
+        return JsonResponse({"redirect": "/accounts/login/?next=" + request.path}, status=401)
+    
+    speech = get_object_or_404(Speech, slug=slug)
+    fav, created = Favorite.objects.get_or_create(user=request.user, speech=speech)
+
+    if not created:
+        print('is liked before....')
+        # یعنی قبلاً لایک کرده بود → حذف کنیم
+        fav.delete()
+        return JsonResponse({"liked": False, "count": speech.favorites.count()})
+
+    print('new like❤️')
+    # لایک جدید
+    return JsonResponse({"liked": True, "count": speech.favorites.count()})
+
+
+# نمایش لیست سخنرانی‌های محبوب کاربر
+@login_required
+def my_favorites(request):
+    favorites = Speech.objects.filter(favorites__user=request.user)
+    return render(request, "my_favorites.html", {"favorites": favorites})

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     
     # My Apps
+    'accounts',
     "homePage",
     "speech"
 ]
@@ -139,3 +140,6 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+#! Using Custom User
+AUTH_USER_MODEL = "accounts.User"

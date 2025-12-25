@@ -1,0 +1,104 @@
+{% extends 'base.html' %} 
+{% load static %}
+
+{% block stylesImports %}
+    <link href="{% static './login.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<div class="login-wrap">
+    <div class="login-html">
+        <div id="tab-1" type="radio" name="tab" class="sign-in" checked>
+            <label for="tab-1" class="tab">ورود</label>
+        </div>
+        {% comment %}
+        <div id="tab-2" type="radio" name="tab" class="sign-up">
+            <label for="tab-2" class="tab">Sign Up</label>
+        </div>
+        {% endcomment %}
+        <form class="login-form" action="{% url 'accounts:login' %}" method="POST">
+            {% comment %}! لاگین{% endcomment %}
+            <div class="sign-in-htm">
+                {% csrf_token %}
+
+                {% comment %} <table>
+                    <tr>
+                        <td>{{ form.email.label_tag }}</td>
+                        <td>{{ form.email }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.password.label_tag }}</td>
+                        <td>{{ form.password }}</td>
+                    </tr>
+                </table> {% endcomment %}
+
+                <div class="group">
+                    <label for="email" class="label">Email</label>
+                    <input id="email" name="email" type="email" class="input" />
+                </div>
+                <div class="group">
+                    <label for="pass" class="label">Password</label>
+                    <input id="password" name="password" type="password" class="input" data-type="password" />
+                </div>
+
+                {% comment %}
+                <div class="group">
+                    <input id="check" type="checkbox" class="check" checked />
+                    <label for="check"><span class="icon"></span> Keep me Signed in</label>
+                </div>
+                {% endcomment %}
+                {% comment %} TODO:  برای هندل کردن redirect گرچه نمی دونم راهکارش optimize هست یا نه{% endcomment %}
+                <input type="hidden" name="next" value="{{ next }}">
+                <div class="group">
+                    <button type="submit" class="button" value="Sign In">Sign In</button>
+                </div>
+                <div class="hr"></div>
+                <div class="foot-lnk">
+                    <a href="{% url 'accounts:register' %}">Want to Sign-Up?</a>
+                </div>
+            </div>
+        </form>
+        {% if form.errors %}
+        <div class="alert alert-error">
+            <h6>Please fix the following errors</h6>
+            <ul>
+                {% for field in form %}
+                {% if field.errors %}
+                {% for error in field.errors %}
+                <li>
+                    <a href="#id_{{ field.name }}" class="error">{{ error|escape }}</a>
+                </li>
+                {% endfor %}
+                {% endif %}
+                {% endfor %}
+            </ul>
+            {% if form.non_field_errors %} {{ form.non_field_errors }} {% endif %}
+        </div>
+        {% endif %}
+        
+{% comment %} 
+        {% if messages %}
+        {% for message in messages %}
+            {{ message|safe }}
+        {% endfor %}
+        {% endif %}
+
+        {% if form.errors %}
+        <div class="alert alert-error">
+            <ul>
+                {% for field in form %}
+                {% if field.errors %}
+                {% for error in field.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+                {% endif %}
+                {% endfor %}
+            </ul>
+            {% if form.non_field_errors %}
+                {{ form.non_field_errors.as_text }}
+            {% endif %}
+        </div>
+        {% endif %} {% endcomment %}
+    </div>
+</div>
+{% endblock %}
