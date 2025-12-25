@@ -1,10 +1,11 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Speech, Tag, Category, Favorite
 from django.db.models import Q, F
 import re
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods
 
 
 # Create your views here.
@@ -83,11 +84,14 @@ def to_seconds(t):
 
 def speech_detail(request, speechSlug):
     theSpeech = get_object_or_404(Speech, slug=speechSlug)
-    print(theSpeech)
 
     is_liked = False
+    note = ''
     if request.user.is_authenticated:
-        is_liked = theSpeech.favorites.filter(user=request.user).exists()
+        favorite = theSpeech.favorites.filter(user=request.user).first()
+        if favorite:
+            note = favorite.note
+            is_liked = favorite.is_liked
 
     # برای شمارش بازدید(visit_count)
     session_key = f"visited_page_{theSpeech.id}"
@@ -113,6 +117,7 @@ def speech_detail(request, speechSlug):
             "lyric": result,
             "minutes": minute,
             "is_liked": is_liked,
+            "note": note
         },
     )
 
@@ -125,15 +130,14 @@ def toggle_favorite(request, slug):
     speech = get_object_or_404(Speech, slug=slug)
     fav, created = Favorite.objects.get_or_create(user=request.user, speech=speech)
 
-    if not created:
-        print('is liked before....')
-        # یعنی قبلاً لایک کرده بود → حذف کنیم
-        fav.delete()
-        return JsonResponse({"liked": False, "count": speech.favorites.count()})
+    # toggle like
+    fav.is_liked = not fav.is_liked
+    fav.save()
 
-    print('new like❤️')
-    # لایک جدید
-    return JsonResponse({"liked": True, "count": speech.favorites.count()})
+    return JsonResponse({
+        "liked": fav.is_liked,
+        "count": speech.favorites.filter(is_liked=True).count(),
+    })
 
 
 # نمایش لیست سخنرانی‌های محبوب کاربر
@@ -141,3 +145,20 @@ def toggle_favorite(request, slug):
 def my_favorites(request):
     favorites = Speech.objects.filter(favorites__user=request.user)
     return render(request, "my_favorites.html", {"favorites": favorites})
+
+# ذخیره یادداشت خصوصی کاربر
+@require_http_methods(["POST"])
+def save_note(request, slug):
+    if not request.user.is_authenticated:
+        return redirect(f"/accounts/login/?next={request.path}")
+
+    speech = get_object_or_404(Speech, slug=slug)
+    note_text = request.POST.get("note", "").strip()
+
+    fav, created = Favorite.objects.get_or_create(user=request.user, speech=speech)
+    fav.note = note_text
+    fav.save()
+    
+    return JsonResponse({
+        "note": fav.note
+    }, status=200)

@@ -8,6 +8,7 @@ urlpatterns = [
     path("tags/<slug:slug>/", tag_detail, name="tag_detail"),
     path("<slug:slug>/favorite/", toggle_favorite, name="toggle_favorite"),
     # path("my-favorites/", my_favorites, name="my_favorites"),
+    path("speech/<slug:slug>/note/", save_note, name="save_note"),
 ]
 
 # ! برای لیست سخنرانی های  محبوب

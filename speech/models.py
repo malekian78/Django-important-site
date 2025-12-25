@@ -156,13 +156,36 @@ class CulturalGroup(models.Model):
         return self.title
 
 
+# class Favorite(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorites")
+#     speech = models.ForeignKey("Speech", on_delete=models.CASCADE, related_name="favorites")
+#     note = models.TextField(max_length=500, blank=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
+
+#     class Meta:
+#         unique_together = ("user", "speech")  # هر کاربر فقط یک بار می‌تواند لایک کند
+
+#     def __str__(self):
+#         return f"{self.user} → {self.speech}"
+
 class Favorite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorites")
     speech = models.ForeignKey("Speech", on_delete=models.CASCADE, related_name="favorites")
+
+    is_liked = models.BooleanField(default=False)
+    note = models.TextField(max_length=500, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ("user", "speech")  # هر کاربر فقط یک بار می‌تواند لایک کند
+        unique_together = ("user", "speech")
 
     def __str__(self):
         return f"{self.user} → {self.speech}"
+
+class SpeechComment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    speech = models.ForeignKey("Speech", on_delete=models.CASCADE)
+    comment = models.TextField(max_length=250)
+    created_at = models.DateTimeField(auto_now_add=True)
+    published = models.BooleanField(default=False)

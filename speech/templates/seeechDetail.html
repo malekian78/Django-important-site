@@ -19,11 +19,11 @@
       const slug = this.getAttribute('data-slug')
     
       /* 
-          fetch(`/speech/${slug}/favorite/`, { credentials: 'include' })
-            .then((res) => res.json())
-            .then((data) => {
-              this.textContent = data.liked ? '❤️ پسندیده شده' : '🤍 پسندیدن'
-            })*/
+              fetch(`/speech/${slug}/favorite/`, { credentials: 'include' })
+                .then((res) => res.json())
+                .then((data) => {
+                  this.textContent = data.liked ? '❤️ پسندیده شده' : '🤍 پسندیدن'
+                })*/
     
       fetch(`/speech/${slug}/favorite/`, { credentials: 'include' })
         .then((res) => {
@@ -35,8 +35,34 @@
         })
         .then((data) => {
           if (!data) return
-          btn.textContent = data.liked ? '❤️' : '🤍'
+          this.textContent = data.liked ? '❤️ پسندیده شده' : '🤍 پسندیدن'
         })
+    })
+    
+    document.getElementById('noteForm').addEventListener('submit', function (e) {
+      e.preventDefault() // جلوگیری از reload صفحه
+    
+      const note = document.getElementById('note').value
+      const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value
+    
+      fetch("{% url 'speech:save_note' theSpeech.slug %}", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': csrf
+        },
+        body: new URLSearchParams({
+          note: note
+        })
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          // نمایش پیام موفقیت
+          const msg = document.getElementById('saveStatus')
+          msg.style.display = 'inline'
+          setTimeout(() => (msg.style.display = 'none'), 2000)
+        })
+        .catch((err) => console.error(err))
     })
   </script>
 {% endblock %}
@@ -153,6 +179,13 @@
       <span>{{ theSpeech.location }}</span>
     </div>
   </div>
+
+  <form id="noteForm">
+    {% csrf_token %}
+    <textarea id="note" name="note" rows="6" style="width: 100%;">{{ note }}</textarea>
+    <button type="submit">ذخیره یادداشت</button>
+  </form>
+  <p id="saveStatus" style="color: green; display:none;">ذخیره شد ✔</p>
 
   <div id="transcript">
     <h3>متن سخنرانی:</h3>
