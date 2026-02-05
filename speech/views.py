@@ -6,12 +6,139 @@ import re
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
+import random
+import string
+from datetime import timedelta
+from django.utils.text import slugify
+from django.core.exceptions import ValidationError
+from jdatetime import date as jdate
+from jdatetime import datetime as jdatetime
+from pathlib import Path
+
+def save_default_data():
+    BASE_DIR = Path("F:/WebScripting/WebScripingTutorial/eitaa/toSaveDatabase")
+
+    def extract_index(folder_name: str) -> int:
+        """
+        استخراج اندیس عددی فولدر
+        مثال:
+        '10-1404-7-24' -> 10
+        '21' -> 21
+        """
+        return int(folder_name.split('-')[0])
+    
+    def random_string(length=8):
+        return ''.join(random.choices(string.ascii_lowercase + string.digits, k=length))
 
 
-# Create your views here.
+    txt_files = []
+
+    folders = sorted(
+        (f for f in BASE_DIR.iterdir() if f.is_dir()),
+        key=lambda f: extract_index(f.name)
+    )
+
+    for folder in folders:
+        # گرفتن txt داخل فولدر
+        txts = list(folder.glob('*.txt'))
+
+        if not txts:
+            raise FileNotFoundError(f"No txt file found in {folder}")
+
+        if len(txts) > 1:
+            raise RuntimeError(f"Multiple txt files found in {folder}")
+
+        txt_files.append(txts[0])
+
+
+    # خروجی نهایی
+    for i, txt in enumerate(txt_files):
+        print(i, txt)
+
+
+
+
+    def parse_txt_content(text: str):
+        # MessageLink
+        message_link_match = re.search(r'MessageLink:(.+)', text)
+        message_link = message_link_match.group(1).strip() if message_link_match else None
+
+        # DocumentURL
+        document_url_match = re.search(r'DocumentURL:(.+)', text)
+        document_url = document_url_match.group(1).strip() if document_url_match else None
+
+        # تاریخ (فرمت yyyy-mm-dd)
+        date_match = re.search(r'\b\d{4}-\d{1,2}-\d{1,2}\b', text)
+        date = date_match.group(0) if date_match else None
+
+        # متن اصلی (همه چیز قبل از MessageLink)
+        if message_link_match:
+            main_text = text[:message_link_match.start()].strip()
+        else:
+            main_text = text.strip()
+
+        return {
+            "main_text": main_text,
+            "message_link": message_link,
+            "date": date,
+            "document_url": document_url
+        }
+        
+
+    for txtF in txt_files:    
+        with open(str(txtF), "r", encoding="utf-8") as f:
+            content = f.read()
+
+        result = parse_txt_content(content)
+        # print("متن اصلی:\n", result["main_text"])
+        # print("\nMessageLink:", result["message_link"])
+        # print("Date:", result["date"])
+        # print("DocumentURL:", result["document_url"])
+        # print("____________________________________")
+        # print("____________________________________")
+        
+        # تبدیل تاریخ جلالی
+        # event_date = jdate.fromisoformat(result["date"]) // Invalid isoformat string: '1404-10-4'
+        event_date = jdatetime.strptime(result["date"], "%Y-%m-%d").date()
+
+        # ساخت title
+        title = result["date"] or f"speech-{random_string()}"
+
+        # ساخت slug
+        slug = slugify(title, allow_unicode=True)
+        if not slug:
+            slug = random_string()
+
+        # publish_time = سه ماه بعد
+        publish_time = event_date + timedelta(days=90)
+
+        speech = Speech(
+            title=title,
+            audio_file=None,
+            audio_link=result["document_url"],
+            slug=slug,
+            publish_time=publish_time,
+            event_date_time=event_date,
+            cultural=None,
+            location="مقبره علامه مجلسی(ع)",
+            sumary=result["main_text"],
+            lyrics=None,
+        )
+
+        # اجرای clean مدل (خیلی مهم)
+        speech.full_clean()
+        speech.save()
+
+
+
 def speech_list(request):
     # allSpeech = Speech.objects.all()
-    allSpeech = Speech.objects.prefetch_related("category", "tag")
+    today = jdate.today()
+    # allSpeech = Speech.objects.prefetch_related("category", "tag").filter(
+    #     publish_time__lte=today
+    # )
+    allSpeech = Speech.objects.prefetch_related("category", "tag").published()
+
     search = request.GET.get("search")
     if search:
         allSpeech = allSpeech.filter(
@@ -81,7 +208,6 @@ def to_seconds(t):
     m, s = t.split(":")
     return int(m) * 60 + float(s)
 
-
 def speech_detail(request, speechSlug):
     theSpeech = get_object_or_404(Speech, slug=speechSlug)
 
@@ -100,22 +226,33 @@ def speech_detail(request, speechSlug):
         request.session[session_key] = True
 
     pattern = r"\[(\d{2}:\d{2}\.\d{3}) --> (\d{2}:\d{2}\.\d{3})\]\s+(.*)"
-    matches = re.findall(pattern, theSpeech.lyrics)
+    matches = re.findall(pattern, theSpeech.lyrics or "")
     result = []
-    for start, end, text in matches:
-        result.append(
-            {"start": to_seconds(start), "end": to_seconds(end), "text": text.strip()}
-        )
-    minute = 0
-    if len(result) > 0:
-        minute = int(result[-1]["end"] / 60)
+    has_timing = bool(matches)
+
+    if has_timing:
+        for start, end, text in matches:
+            result.append({
+                "start": to_seconds(start),
+                "end": to_seconds(end),
+                "text": text.strip()
+            })
+    else:
+        # متن خالص – فقط یک آیتم
+        if theSpeech.lyrics:
+            result.append({
+                "start": None,
+                "end": None,
+                "text": theSpeech.lyrics.strip()
+            })
+    
     return render(
         request,
         "seeechDetail.html",
         {
             "theSpeech": theSpeech,
             "lyric": result,
-            "minutes": minute,
+            "has_timing": has_timing,
             "is_liked": is_liked,
             "note": note
         },

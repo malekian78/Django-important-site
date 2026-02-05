@@ -1,3 +1,17 @@
+.admin-edit-link {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 6px 12px;
+    background: #c62828;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 14px;
+    text-decoration: none;
+}
+.admin-edit-link:hover {
+    background: #b71c1c;
+}
+
 .main-introduce  {
     display: flex;
     gap: 12px;
@@ -158,12 +172,6 @@
     padding-right: 22px;
     margin-top: 8px;
 }
-
-/* ۱۲۸۵۳۸۵۳۶۵
-۰۹۱۳۴۳۵۱۲۵۲ */
-
-
-
 
 .category li, .tags li {
     margin-left: 30px;

@@ -15,6 +15,7 @@
   <script src="{% static './speech-detail.js' %}"></script>
 
   <script>
+    // کلید لایک کردن سخنرانی 
     document.getElementById('fav-btn').addEventListener('click', function () {
       const slug = this.getAttribute('data-slug')
     
@@ -39,6 +40,7 @@
         })
     })
     
+    // ذخیره یادداشت شخصی برای این سخنرانی
     document.getElementById('noteForm').addEventListener('submit', function (e) {
       e.preventDefault() // جلوگیری از reload صفحه
     
@@ -150,7 +152,9 @@
           </g>
         </svg>
       </div>
-      <span>{{ minutes }} دقیقه</span>
+      <span id="minutes">
+        نامشخص
+      </span>
     </div>
 
     <div class="feature-card">
@@ -187,12 +191,31 @@
   </form>
   <p id="saveStatus" style="color: green; display:none;">ذخیره شد ✔</p>
 
-  <div id="transcript">
+  <div id="transcript" data-has-timing="{{ has_timing|yesno:'1,0' }}">
     <h3>متن سخنرانی:</h3>
-    {% for item in lyric %}
+    {% comment %} {% for item in lyric %}
       <div class="line" data-start="{{ item.start }}" data-end="{{ item.end }}" id="line-{{ forloop.counter }}">{{ item.text }}</div>
+    {% endfor %} {% endcomment %}
+    {% for item in lyric %}
+      <div
+        class="line"
+        {% if item.start != None %}
+          data-start="{{ item.start }}"
+          data-end="{{ item.end }}"
+        {% endif %}
+        id="line-{{ forloop.counter }}"
+      >
+        {{ item.text }}
+      </div>
     {% endfor %}
   </div>
+  {% if user.is_authenticated and user.is_superuser %}
+    <a href="{% url 'admin:speech_speech_change' theSpeech.id %}"
+      target="_blank"
+      class="admin-edit-link">
+        ✏️ ویرایش در پنل ادمین
+    </a>
+{% endif %}
 
   <div class="category-tags">
     <!-- TAGS -->

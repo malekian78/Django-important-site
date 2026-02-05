@@ -9,15 +9,19 @@ from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.contrib.auth import get_user_model
+import jdatetime
 
 User = get_user_model()
 
-
+class SpeechQuerySet(models.QuerySet):
+    def published(self):
+        return self.filter(publish_time__lte=jdatetime.date.today())
+    
 # Create your models here.
 class Speech(BaseModel):
     title = models.CharField(verbose_name=("عنوان سخنرانی"), max_length=100)
     image = models.ImageField(
-        verbose_name=("تصویر بنر"), upload_to="speech/", default="speech/default.jpg"
+        verbose_name=("تصویر بنر"), upload_to="speech/", default="speech/default.png"
     )
     audio_file = models.FileField(
         verbose_name=("فایل صوتی"),
@@ -39,8 +43,8 @@ class Speech(BaseModel):
         help_text="لینک منحصر به فرد برای دسترسی به این سخنرانی",
         unique=True,
     )
-    category = models.ManyToManyField("Category", verbose_name=("دسته بندی"))
-    tag = models.ManyToManyField("Tag", verbose_name=("تگ‌ها"), blank=True)
+    category = models.ManyToManyField("Category", verbose_name=("دسته بندی"), blank=True, null=True)
+    tag = models.ManyToManyField("Tag", verbose_name=("تگ‌ها"), blank=True, null=True)
     visit_count = models.PositiveIntegerField(
         verbose_name=("تعداد افراد بازدید کننده"), default=0
     )
@@ -59,14 +63,17 @@ class Speech(BaseModel):
         verbose_name="گروه فرهنگی",
         on_delete=models.PROTECT,
         related_name="cultural",
-        null=True
+        null=True,
+        blank=True
     )
     location = models.CharField(
-        verbose_name=("مکان سخنرانی"), max_length=100, blank=True
+        verbose_name=("مکان سخنرانی"), max_length=100, blank=True, null=True
     )
-    sumary = models.TextField(verbose_name="خلاصه سخنرانی", max_length=500, blank=True)
+    sumary = models.TextField(verbose_name="خلاصه سخنرانی", max_length=500, blank=True, null=True)
     lyrics = models.TextField(verbose_name="زیرنویس صوت سخنرانی", blank=True, null=True)
     # TODO: الان واجب نیست .... ولی یه کلید خارجی به یوزر بزن ... بفهمیم چه کسی این پست را ایجاد کرده
+    
+    objects = SpeechQuerySet.as_manager() # در همه‌جا published برای استفاده از
 
     class Meta:
         verbose_name = "سخنرانی"

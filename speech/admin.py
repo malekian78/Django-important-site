@@ -4,6 +4,18 @@ from django.db import models
 from django.forms.widgets import ClearableFileInput
 from django.utils.html import format_html
 
+from django import forms
+from django_jalali.admin.widgets import AdminjDateWidget
+
+
+class SpeechAdminForm(forms.ModelForm):
+    class Meta:
+        model = Speech
+        fields = "__all__"
+        widgets = {
+            "publish_time": AdminjDateWidget,
+        }
+
 
 class AudioFileInput(ClearableFileInput):
     def __init__(self, *args, **kwargs):
@@ -15,6 +27,7 @@ class AudioFileInput(ClearableFileInput):
 
 # Register your models here.
 class SpeechAdmin(admin.ModelAdmin):
+    form = SpeechAdminForm
     list_display = (
         "id",
         "title",
@@ -48,11 +61,7 @@ class SpeechAdmin(admin.ModelAdmin):
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = (
-        "name",
-        "parent",
-        "slug"
-    )
+    list_display = ("name", "parent", "slug")
     prepopulated_fields = {"slug": ("name",)}
 
 
@@ -63,16 +72,16 @@ class TagAdmin(admin.ModelAdmin):
     )
     prepopulated_fields = {"slug": ("name",)}
 
+
 @admin.register(CulturalGroup)
 class SpeechOptionAdmin(admin.ModelAdmin):
     list_display = ("title", "image_preview")
 
     def image_preview(self, obj):
         if obj.image:
-            return format_html(
-                '<img src="{}" style="height:50px;" />', obj.image.url
-            )
+            return format_html('<img src="{}" style="height:50px;" />', obj.image.url)
         return "-"
+
 
 admin.site.register(Speech, SpeechAdmin)
 admin.site.register(Category, CategoryAdmin)

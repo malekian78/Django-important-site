@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     
+    'django_jalali',
+    
     # My Apps
     'accounts',
     "homePage",
@@ -143,3 +145,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 #! Using Custom User
 AUTH_USER_MODEL = "accounts.User"
+
+
+# default settings (optional)
+JALALI_DATE_DEFAULTS = {
+   # if change it to true then all dates of the list_display will convert to the Jalali.
+   'LIST_DISPLAY_AUTO_CONVERT': False,
+   'Strftime': {
+        'date': '%y/%m/%d',
+        'datetime': '%H:%M:%S _ %y/%m/%d',
+    }
+}

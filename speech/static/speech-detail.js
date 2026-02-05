@@ -1,4 +1,9 @@
 function syncTranscript(current) {
+    const transcript = document.getElementById("transcript");
+
+    // ❌ اگر تایم‌بندی نداریم، هیچ کاری نکن
+    if (transcript.dataset.hasTiming !== "1") return;
+
     const lines = document.querySelectorAll(".line");
 
     lines.forEach(line => {
@@ -7,7 +12,6 @@ function syncTranscript(current) {
 
         if (current >= start && current <= end) {
             line.classList.add("active");
-            // line.scrollIntoView({ behavior: "smooth", block: "center" });
         } else {
             line.classList.remove("active");
         }
@@ -22,6 +26,7 @@ const btnPlay = document.getElementById("btn-play");
 // const progress = document.getElementById("ap-progress");
 const curr = document.getElementById("ap-current");
 const dur = document.getElementById("ap-duration");
+const minutes = document.getElementById("minutes");
 
 function formatTime(sec) {
     if (isNaN(sec)) return "00:00";
@@ -32,7 +37,7 @@ function formatTime(sec) {
 
 audio.addEventListener("loadedmetadata", () => {
     dur.textContent = formatTime(audio.duration);
-    // progress.max = audio.duration;
+    minutes.textContent = Math.floor(audio.duration / 60) + ' دقیقه';
 });
 
 audio.addEventListener("timeupdate", () => {

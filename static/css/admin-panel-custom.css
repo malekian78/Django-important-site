@@ -1,0 +1,6 @@
+
+img.ui-datepicker-trigger {
+    content: url("/statics/img/calendar.svg") !important;
+    max-width: 30px;
+    cursor: pointer;
+}
