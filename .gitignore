@@ -2,6 +2,11 @@
 Documents/
 media/
 
+tailwindcss-windows-x64.exe
+./tailwindcss-windows-x64.exe
+/tailwindcss-windows-x64.exe
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
