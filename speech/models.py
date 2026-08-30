@@ -43,8 +43,8 @@ class Speech(BaseModel):
         help_text="لینک منحصر به فرد برای دسترسی به این سخنرانی",
         unique=True,
     )
-    category = models.ManyToManyField("Category", verbose_name=("دسته بندی"), blank=True, null=True)
-    tag = models.ManyToManyField("Tag", verbose_name=("تگ‌ها"), blank=True, null=True)
+    category = models.ManyToManyField("Category", verbose_name=("دسته بندی"), blank=True)
+    tag = models.ManyToManyField("Tag", verbose_name=("تگ‌ها"), blank=True)
     visit_count = models.PositiveIntegerField(
         verbose_name=("تعداد افراد بازدید کننده"), default=0
     )

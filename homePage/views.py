@@ -1,14 +1,9 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
-from speech.models import Speech
+from speech.models import CulturalGroup, Speech
 
 
-# Create your views here.
 def home(request):
-    paginator= Paginator(Speech.objects.all(),1)
-    page_number = request.GET.get('page')
-    # page_number = 1
-    page_obj = paginator.get_page(page_number)
-    context={"speech_list_object":page_obj}
-    print("\nobject:", page_obj)
+    groups = CulturalGroup.objects.all()
+    context={"culturalGroups":groups}
     return render(request, 'homePage.html', context)

@@ -1,0 +1,85 @@
+.swiper {
+    width: 100%;
+    height: 400px;
+    margin: 20px 0;
+}
+
+.swiper-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: white;
+    background: #3b82f6;
+    border-radius: 12px;
+}
+
+.cultural-groups-section {
+    position: relative;
+}
+
+.cultural-groups-style {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    z-index: 2;
+    top: -60px;
+    width: 100%;
+}
+
+.cultural-groups-style a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: black;
+    margin: 0 7px;
+    transition: 300ms;
+    border-radius:0 40px;
+    padding: 14px;
+    background-color: white;
+    box-shadow: 0 2px 8px #1919194d;
+    position: relative;
+    overflow: hidden;
+}
+
+.cultural-groups-style a:before,
+.cultural-groups-style a:after {
+    content: "";
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    transform: scale(0);
+    background: #ff3c00;
+    pointer-events: none;
+    transition: .7s;
+    z-index: 1;
+    border-radius: 0 40px;
+}
+
+.cultural-groups-style a:before {
+    transform-origin: top right;
+}
+
+.cultural-groups-style a:after {
+    transform-origin: bottom left;
+}
+
+.cultural-groups-style a:hover:before,
+.cultural-groups-style a:hover:after {
+    transform: scale(1);
+}
+
+.cultural-groups-style img {
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+    position: relative;
+    z-index: 3;
+}

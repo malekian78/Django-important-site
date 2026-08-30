@@ -2,15 +2,18 @@
 
 from django.contrib import admin
 from django.http import HttpResponseRedirect
-from .models import HomePage, MenuItem
+from .models import HomePage, MenuItem, SlideItem
 
 class MenuItemInline(admin.TabularInline):
     model = MenuItem
     extra = 1
+class SlideItemInline(admin.TabularInline):
+    model = SlideItem
+    extra = 1
 
 @admin.register(HomePage)
 class HomePageAdmin(admin.ModelAdmin):
-    inlines = [MenuItemInline]
+    inlines = [MenuItemInline, SlideItemInline]
     
     def has_delete_permission(self, request, obj=None):
         # Prevent deletion entirely

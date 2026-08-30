@@ -138,6 +138,11 @@ def speech_list(request):
     #     publish_time__lte=today
     # )
     allSpeech = Speech.objects.prefetch_related("category", "tag").published()
+    
+    cultural_slug = request.GET.get('cultural_group')
+    if cultural_slug:
+        # فیلتر بر اساس گروه فرهنگی
+        allSpeech = allSpeech.filter(cultural__slug=cultural_slug)
 
     search = request.GET.get("search")
     if search:
@@ -166,6 +171,10 @@ def speech_list(request):
         speechList = speechList.get_page(1)
     except EmptyPage:
         speechList = speechList.get_page(1)
+        
+    query_params = request.GET.copy()
+    if 'page' in query_params:
+        query_params.pop('page')
 
     context = {
         "speechList": speechList,
@@ -177,6 +186,7 @@ def speech_list(request):
         "tags": Tag.objects.all(),
         "selected_categories": list(map(int, selected_categories)),
         "selected_tags": list(map(int, selected_tags)),
+        'querystring': query_params.urlencode(),
     }
 
     return render(request, "speechList.html", context)
