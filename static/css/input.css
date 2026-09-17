@@ -1,28 +1,3 @@
-/* وارد کردن هسته تیل‌ویند در نسخه 4 */
-@import "tailwindcss";
-
-/* 
-  به جای مسیردهی در tailwind.config.js، در نسخه 4 از source@ استفاده می‌کنیم.
-  این آدرس‌ها به تیل‌ویند می‌گویند فایل‌های HTML جنگو کجا هستند تا کلاس‌ها را استخراج کند.
-  مسیرها نسبت به مکان همین فایل input.css سنجیده می‌شوند.
-*/
-@source "../../templates/**/*.html";
-@source "../../**/templates/**/*.html";
-
-/* 
-  به جای theme و extend در tailwind.config.js، در نسخه 4 از theme@ استفاده می‌کنیم.
-  تنظیمات کاستوم خود را اینجا به صورت متغیرهای CSS تعریف کنید.
-*/
-@theme {
-  /* اضافه کردن یک رنگ کاستوم (مثلاً bg-custom-blue) */
-  --color-custom-blue: #1e3a8a;
-  
-  /* اضافه کردن فونت کاستوم (مثلاً font-vazir) */
-  --font-vazir: "Vazirmatn", sans-serif;
-  
-  /* اضافه کردن یک فاصله یا سایز کاستوم (مثلاً p-128 یا w-128) */
-  --spacing-128: 32rem;
-
-  /* اضافه کردن سایه کاستوم (مثلاً shadow-custom) */
-  --shadow-custom: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
